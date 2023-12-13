@@ -1,95 +1,29 @@
-import React, { useState, ChangeEvent } from "react";
-import {
-  Container,
-  TextField,
-  Typography,
-  createTheme,
-  ThemeProvider,
-} from "@mui/material";
-import "./App.css";
+import { useState } from "react";
+import { Switch, ThemeProvider, createTheme } from "@mui/material";
+import GlobalStyle from "./GlobalStyle";
+import ExpenseAnalyzer from "./components/ExpenseAnalyzer";
 
 const App = () => {
-  const [income, setIncome] = useState<number>(0);
-  const [rent, setRent] = useState<number>(0);
-  const [food, setFood] = useState<number>(0);
-  const [extras, setExtras] = useState<number>(0);
-
-  const handleInputChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    setter: React.Dispatch<React.SetStateAction<number>>
-  ) => {
-    setter(parseFloat(event.target.value));
-  };
-
-  const totalExpenses: number = rent + food + extras;
-  const remaining: number = income - totalExpenses;
-  const emergencyFund: number = remaining * 0.2;
-  const savings: number = remaining - emergencyFund;
+  const [darkMode, setDarkMode] = useState(true);
 
   const theme = createTheme({
     palette: {
-      mode: "dark",
+      mode: darkMode ? "dark" : "light",
     },
   });
 
+  const handleThemeChange = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <Container
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography
-          variant="h3"
-          component="h1"
-          gutterBottom
-          sx={{ fontWeight: 700 }}
-        >
-          💰 Expense Analyzer 💰
-        </Typography>
-        <TextField
-          label="Monthly Income"
-          type="number"
-          value={income}
-          onChange={(e) => handleInputChange(e, setIncome)}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Rent"
-          type="number"
-          value={rent}
-          onChange={(e) => handleInputChange(e, setRent)}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Food"
-          type="number"
-          value={food}
-          onChange={(e) => handleInputChange(e, setFood)}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Extra Expenses"
-          type="number"
-          value={extras}
-          onChange={(e) => handleInputChange(e, setExtras)}
-          fullWidth
-          margin="normal"
-        />
-        <Typography variant="h6" component="h2" gutterBottom>
-          Emergency Fund: {emergencyFund.toFixed(2)}
-        </Typography>
-        <Typography variant="h6" component="h2" gutterBottom>
-          Automatic Savings: {savings.toFixed(2)}
-        </Typography>
-      </Container>
-    </ThemeProvider>
+    <>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <Switch checked={darkMode} onChange={handleThemeChange} />
+        <ExpenseAnalyzer />
+      </ThemeProvider>
+    </>
   );
 };
 
